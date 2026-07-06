@@ -328,7 +328,7 @@
         <span>總上車人數</span>
       </div>
       <div class="stat-pill">
-        <strong id="doneStations">0</strong><span class="divider">/</span><strong id="totalStations">0</strong>
+        <strong id="doneStations">0</strong>
         <span>已填站點</span>
       </div>
     </div>
@@ -510,9 +510,16 @@
     $("fillZeroBtn").addEventListener("click", fillRemainingZero);
     $("finishBtn").addEventListener("click", finishTrip);
 
-    ["tripDate", "tripNo", "driverName"].forEach(id => {
+    ["tripDate", "driverName"].forEach(id => {
       $(id).addEventListener("change", () => { saveLocal(); updateAll(); });
       $(id).addEventListener("input", () => { saveLocal(); updateAll(); });
+    });
+
+    $("tripNo").addEventListener("change", () => {
+      resetStationProgress();
+      saveLocal();
+      updateAll();
+      showToast("已切換班次，人數已歸零");
     });
 
     $("minusBtn").addEventListener("click", () => changeModalCount(-1));
@@ -596,7 +603,6 @@
 
     $("totalPeople").textContent = total;
     $("doneStations").textContent = doneCount;
-    $("totalStations").textContent = stations.length;
   }
 
   function updateAll() {
@@ -687,6 +693,12 @@
     showToast("未填站點已填 0，正在同步…");
   }
 
+  function resetStationProgress() {
+    state.stationCounts = {};
+    state.stationDone = {};
+    state.stationSynced = {};
+  }
+
   function finishTrip() {
     if (!state.selectedRoute) { showToast("請先選擇路線"); return; }
     const stations = ROUTES[state.selectedRoute];
@@ -699,8 +711,13 @@
     }
 
     flushQueue();
+    state.tripStarted = false;
     saveLocal();
     showToast(state.syncQueue.length > 0 ? "本趟已完成，剩餘資料將自動補送" : "本趟紀錄已完成並同步");
+
+    $("tripCard").classList.add("hidden");
+    $("setupCard").classList.remove("hidden");
+    $("setupCard").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function resetTrip() {

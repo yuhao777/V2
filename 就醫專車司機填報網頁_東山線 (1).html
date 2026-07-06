@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>就醫專車乘車紀錄｜司機填報</title>
+<style>
+  :root {
+    --bg: #f4f2ec;
+    --surface: #ffffff;
+    --surface-alt: #eef1ef;
+    --ink: #1c2422;
+    --muted: #74827d;
+    --border: #e0ded4;
+    --primary: #0d6e6e;
+    --primary-dark: #0a5555;
+    --primary-soft: #e3f1ef;
+    --accent: #d98f3a;
+    --accent-soft: #fbe9d3;
+    --good: #2f9e58;
+    --good-soft: #e5f6ea;
+    --danger: #cf4a4a;
+    --danger-soft: #fbe7e7;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --shadow: 0 10px 30px rgba(20, 30, 28, 0.08);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    padding-bottom: 24px;
+  }
+
+  header {
+    background: linear-gradient(160deg, var(--primary), #159485 65%, #2fae9a);
+    color: #fff;
+    padding: 22px 18px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::after {
+    content: "";
+    position: absolute;
+    right: -40px; top: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .route-thread {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 3px;
+    background-image: linear-gradient(90deg, rgba(255,255,255,0.85) 0 10px, transparent 10px 20px);
+    background-size: 20px 3px;
+    opacity: 0.7;
+  }
+
+  .wrap { width: min(680px, calc(100% - 24px)); margin: 0 auto; position: relative; z-index: 1; }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    background: rgba(255,255,255,0.16);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 5px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+
+  h1 { margin: 0 0 6px; font-size: clamp(21px, 5vw, 26px); letter-spacing: 0.02em; }
+  .subtitle { margin: 0; opacity: 0.92; font-size: 13.5px; line-height: 1.5; }
+
+  main { margin-top: -22px; }
+
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(224, 222, 212, 0.9);
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+
+  .card-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .card-title h2 { margin: 0; font-size: 17px; }
+  .step-tag { font-size: 11px; font-weight: 900; color: var(--primary); letter-spacing: 0.08em; }
+  .card-hint { color: var(--muted); font-size: 12.5px; margin: 2px 0 14px; line-height: 1.5; }
+
+  .route-options { display: grid; gap: 10px; }
+
+  .route-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: 14px 14px;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color .12s ease, background .12s ease, transform .08s ease;
+  }
+
+  .route-option:active { transform: scale(0.99); }
+
+  .route-option .dot {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid var(--border);
+    flex: 0 0 auto;
+    position: relative;
+  }
+
+  .route-option.selected {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+  }
+
+  .route-option.selected .dot {
+    border-color: var(--primary);
+    background: var(--primary);
+  }
+
+  .route-option.selected .dot::after {
+    content: "";
+    position: absolute; inset: 4px;
+    border-radius: 50%;
+    background: #fff;
+  }
+
+  .route-option .meta { flex: 1; }
+  .route-option .meta small {
+    display: block; font-weight: 600; color: var(--muted); font-size: 12px; margin-top: 2px;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .meta-grid .full { grid-column: 1 / -1; }
+
+  label { display: block; font-size: 12.5px; font-weight: 800; color: #445 ; color: var(--muted); margin-bottom: 5px; }
+
+  input, select, textarea {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 11px 12px;
+    font-size: 16px;
+    background: #fff;
+    color: var(--ink);
+    outline: none;
+    font-family: inherit;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(13, 110, 110, 0.12);
+  }
+
+  button {
+    border: 0;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    color: #fff;
+    background: var(--primary);
+    min-height: 48px;
+    padding: 12px 16px;
+    transition: transform .08s ease, background .15s ease, box-shadow .15s ease, opacity .15s ease;
+  }
+
+  button:active { transform: scale(0.98); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .btn-block { width: 100%; }
+  .btn-secondary { background: var(--surface-alt); color: var(--ink); }
+  .btn-good { background: var(--good); }
+  .btn-danger { background: var(--danger); }
+  .btn-ghost { background: transparent; color: var(--primary); min-height: 36px; padding: 6px 10px; font-size: 13.5px; font-weight: 800; }
+  .btn-ghost:active { transform: none; opacity: 0.6; }
+
+  .cta-row { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .cta-row .secondary-row { display: flex; gap: 10px; }
+  .cta-row .secondary-row button { flex: 1; font-size: 14px; min-height: 42px; }
+
+  .hidden { display: none !important; }
+
+  /* Trip header */
+  .trip-header {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+  }
+  .trip-header .route-name { font-size: 19px; font-weight: 900; }
+  .trip-header .trip-sub { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0 12px; }
+  .stat-pill {
+    background: var(--surface-alt);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap;
+  }
+  .stat-pill strong { font-size: 24px; line-height: 1; color: var(--primary-dark); }
+  .stat-pill span { font-size: 12px; color: var(--muted); font-weight: 700; width: 100%; order: 2; margin-top: 3px; }
+  .stat-pill .divider { color: var(--muted); font-size: 16px; }
+
+  .notice {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: var(--accent-soft);
+    border: 1px solid #f0d3a3;
+    color: #8a5a12;
+    font-weight: 700;
+    font-size: 12.5px;
+    margin-bottom: 6px;
+  }
+
+  /* Station timeline */
+  .station-timeline { margin-top: 8px; }
+
+  .station-row {
+    display: flex;
+    gap: 12px;
+    padding: 12px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+  }
+  .station-row:active { background: var(--surface-alt); }
+
+  .rail {
+    position: relative;
+    width: 20px;
+    flex: 0 0 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .rail::before {
+    content: "";
+    position: absolute;
+    top: 6px; bottom: -18px;
+    width: 2px;
+    background: var(--border);
+  }
+  .station-row:last-child .rail::before { display: none; }
+
+  .rail .dot {
+    width: 15px; height: 15px; border-radius: 50%;
+    background: #fff;
+    border: 2.5px solid var(--border);
+    margin-top: 3px;
+    z-index: 1;
+  }
+  .station-row.done .rail .dot { border-color: var(--good); background: var(--good); }
+  .station-row.zero .rail .dot { border-color: var(--muted); background: var(--muted); }
+  .station-row.done .rail::before { background: var(--good); opacity: 0.35; }
+
+  .station-body { flex: 1; min-width: 0; padding-top: 1px; }
+  .station-index { font-size: 11px; font-weight: 800; color: var(--muted); }
+  .station-name { font-size: 15.5px; font-weight: 800; line-height: 1.35; white-space: pre-line; margin-top: 1px; }
+  .station-hint { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .station-row.done .station-hint { color: var(--good); }
+
+  .count-badge {
+    align-self: center;
+    flex: 0 0 auto;
+    min-width: 46px;
+    text-align: center;
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: var(--surface-alt);
+    color: var(--muted);
+    font-weight: 900;
+    font-size: 16px;
+  }
+  .station-row.done .count-badge { background: var(--good-soft); color: var(--good); }
+  .station-row.zero .count-badge { background: var(--surface-alt); color: var(--muted); }
+
+  .sticky-actions {
+    position: sticky;
+    bottom: 0;
+    background: linear-gradient(to top, var(--surface) 65%, rgba(255,255,255,0));
+    padding: 14px 0 4px;
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .sticky-actions button { flex: 1; font-size: 14.5px; }
+
+  /* Number modal */
+  dialog {
+    border: 0;
+    padding: 0;
+    width: min(420px, calc(100% - 20px));
+    border-radius: 22px;
+    box-shadow: 0 24px 60px rgba(15,23,42,0.28);
+  }
+  dialog::backdrop { background: rgba(15,23,42,0.5); }
+
+  .modal { padding: 20px; }
+  .modal h3 { margin: 0 0 2px; font-size: 13px; color: var(--muted); font-weight: 800; letter-spacing: .04em; }
+  .modal .station-current {
+    font-weight: 900;
+    font-size: 19px;
+    white-space: pre-line;
+    margin-bottom: 16px;
+    line-height: 1.35;
+  }
+
+  .quick-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .chip {
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: var(--surface-alt);
+    color: var(--ink);
+    font-weight: 800;
+    font-size: 15px;
+  }
+  .chip.active { background: var(--primary); color: #fff; }
+
+  .number-row { display: flex; align-items: center; gap: 10px; margin: 4px 0 16px; }
+  .number-row button.step { width: 52px; height: 52px; flex: 0 0 52px; padding: 0; font-size: 24px; background: var(--surface-alt); color: var(--ink); }
+  .number-row input { text-align: center; font-size: 30px; font-weight: 900; height: 58px; }
+
+  .modal-actions { display: flex; gap: 10px; }
+  .modal-actions button { flex: 1; font-size: 14.5px; }
+
+  .toast {
+    position: fixed;
+    left: 50%; bottom: calc(18px + var(--safe-bottom));
+    transform: translateX(-50%);
+    background: #16211f;
+    color: #fff;
+    padding: 11px 18px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 14px;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+    z-index: 30;
+  }
+
+  .summary-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .summary-table th, .summary-table td { border-bottom: 1px solid var(--border); padding: 9px 6px; text-align: left; }
+  .summary-table th { background: var(--surface-alt); font-size: 12px; color: var(--muted); }
+  .summary-table tr:last-child td { border-bottom: 0; }
+
+  @media print {
+    header, .sticky-actions, .cta-row, #setupCard, .notice, .toast { display: none !important; }
+    main { margin-top: 0; }
+    .card { box-shadow: none; border: 1px solid #aaa; }
+  }
+
+  @media (max-width: 420px) {
+    .stat-pill strong { font-size: 21px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="eyebrow" id="todayBadge">今日</span>
+    <h1>就醫專車乘車紀錄</h1>
+    <p class="subtitle">選路線 → 開始行駛 → 停靠站點時點選輸入人數</p>
+  </div>
+  <div class="route-thread"></div>
+</header>
+
+<main class="wrap">
+
+  <!-- STEP 1：選路線 -->
+  <section class="card" id="setupCard">
+    <div class="card-title">
+      <h2>選擇路線</h2>
+      <span class="step-tag">STEP 1</span>
+    </div>
+    <p class="card-hint">點選今日行駛的路線，確認後按「開始行駛」載入站點。</p>
+
+    <div class="route-options" id="routeOptions"></div>
+
+    <div class="meta-grid">
+      <div>
+        <label for="tripDate">日期</label>
+        <input type="date" id="tripDate" />
+      </div>
+      <div>
+        <label for="tripNo">班次</label>
+        <select id="tripNo">
+          <option value="上午第1班">上午第1班</option>
+          <option value="上午第2班">上午第2班</option>
+          <option value="下午第1班">下午第1班</option>
+          <option value="下午第2班">下午第2班</option>
+          <option value="其他">其他</option>
+        </select>
+      </div>
+      <div class="full">
+        <label for="driverName">司機姓名</label>
+        <input type="text" id="driverName" placeholder="例如：王小明" />
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <button id="startBtn" class="btn-block" disabled>開始行駛</button>
+      <div class="secondary-row">
+        <button class="btn-secondary" id="saveBtn">暫存</button>
+        <button class="btn-danger" id="resetBtn">清空本趟</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2：站點輸入 -->
+  <section class="card hidden" id="tripCard">
+    <div class="trip-header">
+      <div>
+        <div class="route-name" id="tripRouteName">—</div>
+        <div class="trip-sub" id="tripSubInfo"></div>
+      </div>
+      <button class="btn-ghost" id="editSetupBtn">修改資料</button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-pill">
+        <strong id="totalPeople">0</strong>
+        <span>總上車人數</span>
+      </div>
+      <div class="stat-pill">
+        <strong id="doneStations">0</strong><span class="divider">/</span><strong id="totalStations">0</strong>
+        <span>已填站點</span>
+      </div>
+    </div>
+
+    <div class="notice">🚐 行駛中請勿操作手機，車輛停妥、上下客完成後再登錄。</div>
+
+    <div class="station-timeline" id="stationTimeline"></div>
+
+    <div class="sticky-actions">
+      <button class="btn-secondary" id="fillZeroBtn">未填站點全填 0</button>
+      <button class="btn-good" id="finishBtn">完成本趟</button>
+    </div>
+  </section>
+
+  <!-- STEP 3：備註與輸出 -->
+  <section class="card hidden" id="wrapupCard">
+    <div class="card-title">
+      <h2>備註與輸出</h2>
+      <span class="step-tag">STEP 3</span>
+    </div>
+    <p class="card-hint">完成後可匯出 CSV，供 Excel／試算表彙整；亦可直接列印或另存 PDF。</p>
+
+    <div>
+      <label for="tripNote">備註</label>
+      <textarea id="tripNote" rows="3" placeholder="例如：某站未停靠、乘客臨時取消、車況異常等"></textarea>
+    </div>
+
+    <div class="cta-row">
+      <div class="secondary-row">
+        <button class="btn-good" id="exportCsvBtn">匯出 CSV</button>
+        <button class="btn-secondary" id="printBtn">列印／存 PDF</button>
+      </div>
+    </div>
+
+    <div style="margin-top:16px; overflow:auto;">
+      <table class="summary-table" id="summaryTable">
+        <thead>
+          <tr>
+            <th style="width:44px;">序</th>
+            <th>站點</th>
+            <th style="width:70px;">人數</th>
+            <th style="width:80px;">狀態</th>
+          </tr>
+        </thead>
+        <tbody id="summaryBody">
+          <tr><td colspan="4">尚未載入站點。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<dialog id="countDialog">
+  <div class="modal">
+    <h3>本站上車人數</h3>
+    <div class="station-current" id="modalStationName"></div>
+
+    <div class="quick-chips" id="quickChips"></div>
+
+    <div class="number-row">
+      <button type="button" class="step" id="minusBtn">−</button>
+      <input type="number" id="modalCount" min="0" step="1" inputmode="numeric" />
+      <button type="button" class="step" id="plusBtn">＋</button>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" id="cancelModalBtn">取消</button>
+      <button type="button" class="btn-good" id="saveModalBtn">儲存</button>
+    </div>
+  </div>
+</dialog>
+
+<div id="toast" class="toast hidden">已儲存</div>
+
+<script>
+  const ROUTES = {
+    "東山線": [
+      "鹿東社區新安宮",
+      "鹿草員山宮廟口前",
+      "楊議員服務處",
+      "三角村路口",
+      "後崛活動中心",
+      "菁寮義昌米廠前路口",
+      "菁寮國小",
+      "前菁寮",
+      "後壁鄉公所",
+      "後壁鄉美而美早餐店",
+      "南靖車站",
+      "上茄苳顯濟宮",
+      "土溝\n紅綠燈",
+      "上秀祐舉人廟前榕樹下",
+      "漁市站",
+      "燦坤",
+      "福安宮",
+      "玉豐阿匹婆商店",
+      "大排竹國小",
+      "新營客運白河站",
+      "東山碧軒寺",
+      "大客",
+      "東原國小活動中心",
+      "瓦厝",
+      "青山里"
+    ]
+  };
+
+  const STORAGE_KEY = "chiayi_cgmh_shuttle_trip_record_v2";
+  const QUICK_NUMBERS = [0, 1, 2, 3, 4, 5];
+
+  const $ = (id) => document.getElementById(id);
+
+  const state = {
+    selectedRoute: "",
+    tripStarted: false,
+    currentStationIndex: null,
+    stationCounts: {},
+    stationDone: {}
+  };
+
+  function pad(num) { return String(num).padStart(2, "0"); }
+
+  function todayString() {
+    const now = new Date();
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  }
+
+  function nowTimeString() {
+    const now = new Date();
+    return `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  }
+
+  function init() {
+    $("tripDate").value = todayString();
+    $("todayBadge").textContent = `今日 ${todayString()}`;
+
+    renderRouteOptions();
+    buildQuickChips();
+    loadLocal();
+    bindEvents();
+    updateAll();
+  }
+
+  function renderRouteOptions() {
+    const box = $("routeOptions");
+    box.innerHTML = "";
+    Object.keys(ROUTES).forEach(route => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "route-option";
+      btn.dataset.route = route;
+      btn.innerHTML = `
+        <span class="dot"></span>
+        <span class="meta">${escapeHtml(route)}<small>共 ${ROUTES[route].length} 站</small></span>
+      `;
+      btn.addEventListener("click", () => selectRoute(route));
+      box.appendChild(btn);
+    });
+  }
+
+  function buildQuickChips() {
+    const box = $("quickChips");
+    box.innerHTML = "";
+    QUICK_NUMBERS.forEach(n => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip";
+      chip.textContent = n;
+      chip.addEventListener("click", () => {
+        $("modalCount").value = n;
+        highlightChip(n);
+      });
+      chip.dataset.value = n;
+      box.appendChild(chip);
+    });
+  }
+
+  function highlightChip(value) {
+    document.querySelectorAll("#quickChips .chip").forEach(chip => {
+      chip.classList.toggle("active", Number(chip.dataset.value) === Number(value));
+    });
+  }
+
+  function selectRoute(route) {
+    state.selectedRoute = route;
+    document.querySelectorAll(".route-option").forEach(btn => {
+      btn.classList.toggle("selected", btn.dataset.route === route);
+    });
+    $("startBtn").disabled = false;
+    saveLocal();
+  }
+
+  function bindEvents() {
+    $("startBtn").addEventListener("click", startTrip);
+    $("saveBtn").addEventListener("click", () => { saveLocal(); showToast("已暫存紀錄"); });
+    $("resetBtn").addEventListener("click", resetTrip);
+    $("editSetupBtn").addEventListener("click", () => {
+      $("setupCard").classList.remove("hidden");
+      $("setupCard").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    $("fillZeroBtn").addEventListener("click", fillRemainingZero);
+    $("finishBtn").addEventListener("click", finishTrip);
+    $("exportCsvBtn").addEventListener("click", exportCsv);
+    $("printBtn").addEventListener("click", () => window.print());
+
+    ["tripDate", "tripNo", "driverName", "tripNote"].forEach(id => {
+      $(id).addEventListener("change", () => { saveLocal(); updateAll(); });
+      $(id).addEventListener("input", () => { saveLocal(); updateAll(); });
+    });
+
+    $("minusBtn").addEventListener("click", () => changeModalCount(-1));
+    $("plusBtn").addEventListener("click", () => changeModalCount(1));
+    $("cancelModalBtn").addEventListener("click", closeModal);
+    $("saveModalBtn").addEventListener("click", saveStationCount);
+    $("modalCount").addEventListener("input", () => highlightChip($("modalCount").value));
+  }
+
+  function startTrip() {
+    const route = state.selectedRoute;
+    if (!route || !ROUTES[route]) {
+      showToast("請先選擇路線");
+      return;
+    }
+
+    ROUTES[route].forEach((_, index) => {
+      if (typeof state.stationCounts[index] === "undefined") state.stationCounts[index] = "";
+      if (typeof state.stationDone[index] === "undefined") state.stationDone[index] = false;
+    });
+
+    state.tripStarted = true;
+    $("setupCard").classList.add("hidden");
+    $("tripCard").classList.remove("hidden");
+    $("wrapupCard").classList.remove("hidden");
+    saveLocal();
+    updateAll();
+    $("tripCard").scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("已載入站點");
+  }
+
+  function renderTripHeader() {
+    const route = state.selectedRoute;
+    $("tripRouteName").textContent = route || "—";
+    const parts = [];
+    if ($("tripDate").value) parts.push($("tripDate").value);
+    if ($("tripNo").value) parts.push($("tripNo").value);
+    if ($("driverName").value) parts.push(`司機：${$("driverName").value}`);
+    $("tripSubInfo").textContent = parts.join(" ・ ");
+  }
+
+  function renderStations() {
+    const timeline = $("stationTimeline");
+    timeline.innerHTML = "";
+
+    if (!state.selectedRoute || !ROUTES[state.selectedRoute]) return;
+
+    const stations = ROUTES[state.selectedRoute];
+
+    stations.forEach((station, index) => {
+      const done = Boolean(state.stationDone[index]);
+      const value = state.stationCounts[index];
+      const isZero = done && Number(value) === 0;
+
+      const row = document.createElement("div");
+      row.className = "station-row" + (done ? " done" : "") + (isZero ? " zero" : "");
+      row.innerHTML = `
+        <div class="rail"><div class="dot"></div></div>
+        <div class="station-body">
+          <div class="station-index">第 ${index + 1} 站</div>
+          <div class="station-name">${escapeHtml(station)}</div>
+          <div class="station-hint">${done ? "已填寫，點選可修改" : "點選輸入人數"}</div>
+        </div>
+        <div class="count-badge">${done ? Number(value) : "－"}</div>
+      `;
+      row.addEventListener("click", () => openModal(index));
+      timeline.appendChild(row);
+    });
+  }
+
+  function renderSummary() {
+    const body = $("summaryBody");
+    body.innerHTML = "";
+
+    if (!state.selectedRoute || !ROUTES[state.selectedRoute]) {
+      body.innerHTML = `<tr><td colspan="4">尚未載入站點。</td></tr>`;
+      return;
+    }
+
+    ROUTES[state.selectedRoute].forEach((station, index) => {
+      const done = Boolean(state.stationDone[index]);
+      const count = done ? Number(state.stationCounts[index]) : "";
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${index + 1}</td>
+        <td style="white-space: pre-line;">${escapeHtml(station)}</td>
+        <td>${done ? count : "-"}</td>
+        <td>${done ? "已填寫" : "未填寫"}</td>
+      `;
+      body.appendChild(tr);
+    });
+  }
+
+  function updateStats() {
+    const route = state.selectedRoute;
+    const stations = route && ROUTES[route] ? ROUTES[route] : [];
+    const total = stations.reduce((sum, _, index) => sum + (state.stationDone[index] ? Number(state.stationCounts[index] || 0) : 0), 0);
+    const doneCount = stations.reduce((sum, _, index) => sum + (state.stationDone[index] ? 1 : 0), 0);
+
+    $("totalPeople").textContent = total;
+    $("doneStations").textContent = doneCount;
+    $("totalStations").textContent = stations.length;
+  }
+
+  function updateAll() {
+    renderTripHeader();
+    renderStations();
+    renderSummary();
+    updateStats();
+  }
+
+  function openModal(index) {
+    state.currentStationIndex = index;
+    const station = ROUTES[state.selectedRoute][index];
+    $("modalStationName").textContent = `第 ${index + 1} 站　${station}`;
+    const current = state.stationDone[index] ? Number(state.stationCounts[index]) : 0;
+    $("modalCount").value = current;
+    highlightChip(current);
+    $("countDialog").showModal();
+    setTimeout(() => $("modalCount").select(), 50);
+  }
+
+  function closeModal() {
+    $("countDialog").close();
+    state.currentStationIndex = null;
+  }
+
+  function changeModalCount(delta) {
+    const current = Number($("modalCount").value || 0);
+    const next = Math.max(0, current + delta);
+    $("modalCount").value = next;
+    highlightChip(next);
+  }
+
+  function saveStationCount() {
+    const index = state.currentStationIndex;
+    if (index === null || index === undefined) return;
+
+    const value = Number($("modalCount").value);
+    if (!Number.isInteger(value) || value < 0) {
+      showToast("請輸入 0 以上整數");
+      $("modalCount").focus();
+      return;
+    }
+
+    state.stationCounts[index] = value;
+    state.stationDone[index] = true;
+    saveLocal();
+    updateAll();
+    closeModal();
+    showToast("站點人數已儲存");
+  }
+
+  function fillRemainingZero() {
+    if (!state.selectedRoute) { showToast("請先選擇路線"); return; }
+
+    ROUTES[state.selectedRoute].forEach((_, index) => {
+      if (!state.stationDone[index]) {
+        state.stationCounts[index] = 0;
+        state.stationDone[index] = true;
+      }
+    });
+
+    saveLocal();
+    updateAll();
+    showToast("未填站點已填 0");
+  }
+
+  function finishTrip() {
+    if (!state.selectedRoute) { showToast("請先選擇路線"); return; }
+
+    const stations = ROUTES[state.selectedRoute];
+    const missing = stations.map((_, index) => index).filter(index => !state.stationDone[index]);
+
+    if (missing.length > 0) {
+      const confirmFill = confirm(`尚有 ${missing.length} 個站點未填寫，是否全部填 0 並完成？`);
+      if (confirmFill) fillRemainingZero();
+      else return;
+    }
+
+    saveLocal();
+    $("wrapupCard").scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("本趟紀錄已完成，可於下方匯出");
+  }
+
+  function resetTrip() {
+    const ok = confirm("確定要清空本趟紀錄嗎？此動作無法復原。");
+    if (!ok) return;
+
+    state.selectedRoute = "";
+    state.tripStarted = false;
+    state.currentStationIndex = null;
+    state.stationCounts = {};
+    state.stationDone = {};
+
+    document.querySelectorAll(".route-option").forEach(btn => btn.classList.remove("selected"));
+    $("startBtn").disabled = true;
+    $("tripDate").value = todayString();
+    $("tripNo").value = "上午第1班";
+    $("driverName").value = "";
+    $("tripNote").value = "";
+
+    localStorage.removeItem(STORAGE_KEY);
+    $("setupCard").classList.remove("hidden");
+    $("tripCard").classList.add("hidden");
+    $("wrapupCard").classList.add("hidden");
+    updateAll();
+    showToast("已清空本趟紀錄");
+  }
+
+  function saveLocal() {
+    const payload = {
+      selectedRoute: state.selectedRoute,
+      tripStarted: state.tripStarted,
+      tripDate: $("tripDate").value,
+      tripNo: $("tripNo").value,
+      driverName: $("driverName").value,
+      tripNote: $("tripNote").value,
+      stationCounts: state.stationCounts,
+      stationDone: state.stationDone
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+  }
+
+  function loadLocal() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+
+    try {
+      const payload = JSON.parse(raw);
+      state.selectedRoute = payload.selectedRoute || "";
+      state.tripStarted = Boolean(payload.tripStarted);
+      state.stationCounts = payload.stationCounts || {};
+      state.stationDone = payload.stationDone || {};
+
+      $("tripDate").value = payload.tripDate || todayString();
+      $("tripNo").value = payload.tripNo || "上午第1班";
+      $("driverName").value = payload.driverName || "";
+      $("tripNote").value = payload.tripNote || "";
+
+      if (state.selectedRoute) {
+        document.querySelectorAll(".route-option").forEach(btn => {
+          btn.classList.toggle("selected", btn.dataset.route === state.selectedRoute);
+        });
+        $("startBtn").disabled = false;
+      }
+
+      if (state.tripStarted && state.selectedRoute) {
+        $("setupCard").classList.add("hidden");
+        $("tripCard").classList.remove("hidden");
+        $("wrapupCard").classList.remove("hidden");
+      }
+    } catch (err) {
+      console.warn("Cannot load local state", err);
+    }
+  }
+
+  function exportCsv() {
+    if (!state.selectedRoute) { showToast("請先選擇路線"); return; }
+
+    const route = state.selectedRoute;
+    const rows = [];
+    rows.push(["日期", "匯出時間", "路線", "班次", "司機姓名", "站點序號", "站點名稱", "上車人數", "備註"]);
+
+    ROUTES[route].forEach((station, index) => {
+      rows.push([
+        $("tripDate").value,
+        nowTimeString(),
+        route,
+        $("tripNo").value,
+        $("driverName").value,
+        index + 1,
+        station.replace(/\n/g, ""),
+        state.stationDone[index] ? Number(state.stationCounts[index]) : "",
+        $("tripNote").value
+      ]);
+    });
+
+    const csv = "\uFEFF" + rows.map(row => row.map(csvCell).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const fileName = `${$("tripDate").value}_${route}_${$("tripNo").value}_乘車紀錄.csv`;
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast("已匯出 CSV");
+  }
+
+  function csvCell(value) {
+    const text = String(value ?? "");
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function showToast(message) {
+    const toast = $("toast");
+    toast.textContent = message;
+    toast.classList.remove("hidden");
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => toast.classList.add("hidden"), 1800);
+  }
+
+  init();
+</script>
+</body>
+</html>

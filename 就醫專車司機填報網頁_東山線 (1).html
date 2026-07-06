@@ -28,7 +28,6 @@
   }
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
   html { -webkit-text-size-adjust: 100%; }
 
   body {
@@ -46,39 +45,39 @@
     position: relative;
     overflow: hidden;
   }
-
   header::after {
     content: "";
-    position: absolute;
-    right: -40px; top: -60px;
-    width: 220px; height: 220px;
-    border-radius: 50%;
+    position: absolute; right: -40px; top: -60px;
+    width: 220px; height: 220px; border-radius: 50%;
     background: rgba(255,255,255,0.08);
   }
-
   .route-thread {
-    position: absolute;
-    left: 0; right: 0; bottom: 0;
-    height: 3px;
+    position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
     background-image: linear-gradient(90deg, rgba(255,255,255,0.85) 0 10px, transparent 10px 20px);
-    background-size: 20px 3px;
-    opacity: 0.7;
+    background-size: 20px 3px; opacity: 0.7;
   }
 
   .wrap { width: min(680px, calc(100% - 24px)); margin: 0 auto; position: relative; z-index: 1; }
 
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+
   .eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 800; letter-spacing: 0.08em;
+    background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.3);
+    padding: 5px 10px; border-radius: 999px; margin-bottom: 10px;
+  }
+
+  .settings-btn {
     background: rgba(255,255,255,0.16);
     border: 1px solid rgba(255,255,255,0.3);
-    padding: 5px 10px;
+    color: #fff;
     border-radius: 999px;
-    margin-bottom: 10px;
+    min-height: 34px;
+    padding: 6px 12px;
+    font-size: 12.5px;
+    font-weight: 800;
+    display: flex; align-items: center; gap: 6px;
   }
 
   h1 { margin: 0 0 6px; font-size: clamp(21px, 5vw, 26px); letter-spacing: 0.02em; }
@@ -95,14 +94,7 @@
     margin-bottom: 14px;
   }
 
-  .card-title {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 4px;
-  }
-
+  .card-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
   .card-title h2 { margin: 0; font-size: 17px; }
   .step-tag { font-size: 11px; font-weight: 900; color: var(--primary); letter-spacing: 0.08em; }
   .card-hint { color: var(--muted); font-size: 12.5px; margin: 2px 0 14px; line-height: 1.5; }
@@ -110,94 +102,39 @@
   .route-options { display: grid; gap: 10px; }
 
   .route-option {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    text-align: left;
-    border: 1.5px solid var(--border);
-    background: var(--surface);
-    border-radius: var(--radius-md);
-    padding: 14px 14px;
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--ink);
-    cursor: pointer;
+    display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+    border: 1.5px solid var(--border); background: var(--surface);
+    border-radius: var(--radius-md); padding: 14px; font-size: 16px; font-weight: 800;
+    color: var(--ink); cursor: pointer;
     transition: border-color .12s ease, background .12s ease, transform .08s ease;
   }
-
   .route-option:active { transform: scale(0.99); }
-
-  .route-option .dot {
-    width: 20px; height: 20px; border-radius: 50%;
-    border: 2px solid var(--border);
-    flex: 0 0 auto;
-    position: relative;
-  }
-
-  .route-option.selected {
-    border-color: var(--primary);
-    background: var(--primary-soft);
-  }
-
-  .route-option.selected .dot {
-    border-color: var(--primary);
-    background: var(--primary);
-  }
-
-  .route-option.selected .dot::after {
-    content: "";
-    position: absolute; inset: 4px;
-    border-radius: 50%;
-    background: #fff;
-  }
-
+  .route-option .dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); flex: 0 0 auto; position: relative; }
+  .route-option.selected { border-color: var(--primary); background: var(--primary-soft); }
+  .route-option.selected .dot { border-color: var(--primary); background: var(--primary); }
+  .route-option.selected .dot::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: #fff; }
   .route-option .meta { flex: 1; }
-  .route-option .meta small {
-    display: block; font-weight: 600; color: var(--muted); font-size: 12px; margin-top: 2px;
-  }
+  .route-option .meta small { display: block; font-weight: 600; color: var(--muted); font-size: 12px; margin-top: 2px; }
 
-  .meta-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 14px;
-  }
-
+  .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
   .meta-grid .full { grid-column: 1 / -1; }
 
-  label { display: block; font-size: 12.5px; font-weight: 800; color: #445 ; color: var(--muted); margin-bottom: 5px; }
+  label { display: block; font-size: 12.5px; font-weight: 800; color: var(--muted); margin-bottom: 5px; }
 
   input, select, textarea {
-    width: 100%;
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    padding: 11px 12px;
-    font-size: 16px;
-    background: #fff;
-    color: var(--ink);
-    outline: none;
-    font-family: inherit;
+    width: 100%; border: 1.5px solid var(--border); border-radius: 12px;
+    padding: 11px 12px; font-size: 16px; background: #fff; color: var(--ink);
+    outline: none; font-family: inherit;
   }
-
   input:focus, select:focus, textarea:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(13, 110, 110, 0.12);
+    border-color: var(--primary); box-shadow: 0 0 0 4px rgba(13, 110, 110, 0.12);
   }
 
   button {
-    border: 0;
-    border-radius: 14px;
-    font-size: 16px;
-    font-weight: 800;
-    cursor: pointer;
-    color: #fff;
-    background: var(--primary);
-    min-height: 48px;
-    padding: 12px 16px;
+    border: 0; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer;
+    color: #fff; background: var(--primary); min-height: 48px; padding: 12px 16px;
     transition: transform .08s ease, background .15s ease, box-shadow .15s ease, opacity .15s ease;
   }
-
   button:active { transform: scale(0.98); }
   button:disabled { opacity: 0.45; cursor: not-allowed; }
 
@@ -214,71 +151,39 @@
 
   .hidden { display: none !important; }
 
-  /* Trip header */
-  .trip-header {
-    display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
-  }
+  .trip-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
   .trip-header .route-name { font-size: 19px; font-weight: 900; }
   .trip-header .trip-sub { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
 
-  .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0 12px; }
-  .stat-pill {
-    background: var(--surface-alt);
-    border-radius: var(--radius-md);
-    padding: 12px 14px;
-    display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap;
-  }
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0 10px; }
+  .stat-pill { background: var(--surface-alt); border-radius: var(--radius-md); padding: 12px 14px; display: flex; align-items: center; gap: 3px; flex-wrap: wrap; }
   .stat-pill strong { font-size: 24px; line-height: 1; color: var(--primary-dark); }
-  .stat-pill span { font-size: 12px; color: var(--muted); font-weight: 700; width: 100%; order: 2; margin-top: 3px; }
-  .stat-pill .divider { color: var(--muted); font-size: 16px; }
+  .stat-pill span { font-size: 12px; color: var(--muted); font-weight: 700; width: 100%; order: 2; margin-top: 4px; }
+  .stat-pill .divider { color: var(--muted); font-size: 20px; font-weight: 700; position: relative; top: -1px; margin: 0 1px; }
+
+  .sync-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 10px 12px; border-radius: 12px; margin-bottom: 12px; font-size: 12.5px; font-weight: 700;
+  }
+  .sync-bar.ok { background: var(--good-soft); color: #1f6b3d; }
+  .sync-bar.pending { background: var(--accent-soft); color: #8a5a12; }
+  .sync-bar.off { background: var(--surface-alt); color: var(--muted); }
+  .sync-bar button { min-height: 30px; padding: 4px 10px; font-size: 12px; }
 
   .notice {
-    display: flex; align-items: center; gap: 8px;
-    padding: 10px 12px;
-    border-radius: 12px;
-    background: var(--accent-soft);
-    border: 1px solid #f0d3a3;
-    color: #8a5a12;
-    font-weight: 700;
-    font-size: 12.5px;
-    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px;
+    background: var(--accent-soft); border: 1px solid #f0d3a3; color: #8a5a12;
+    font-weight: 700; font-size: 12.5px; margin-bottom: 6px;
   }
 
-  /* Station timeline */
   .station-timeline { margin-top: 8px; }
-
-  .station-row {
-    display: flex;
-    gap: 12px;
-    padding: 12px 2px;
-    cursor: pointer;
-    border-radius: 12px;
-  }
+  .station-row { display: flex; gap: 12px; padding: 12px 2px; cursor: pointer; border-radius: 12px; }
   .station-row:active { background: var(--surface-alt); }
 
-  .rail {
-    position: relative;
-    width: 20px;
-    flex: 0 0 20px;
-    display: flex;
-    justify-content: center;
-  }
-  .rail::before {
-    content: "";
-    position: absolute;
-    top: 6px; bottom: -18px;
-    width: 2px;
-    background: var(--border);
-  }
+  .rail { position: relative; width: 20px; flex: 0 0 20px; display: flex; justify-content: center; }
+  .rail::before { content: ""; position: absolute; top: 6px; bottom: -18px; width: 2px; background: var(--border); }
   .station-row:last-child .rail::before { display: none; }
-
-  .rail .dot {
-    width: 15px; height: 15px; border-radius: 50%;
-    background: #fff;
-    border: 2.5px solid var(--border);
-    margin-top: 3px;
-    z-index: 1;
-  }
+  .rail .dot { width: 15px; height: 15px; border-radius: 50%; background: #fff; border: 2.5px solid var(--border); margin-top: 3px; z-index: 1; }
   .station-row.done .rail .dot { border-color: var(--good); background: var(--good); }
   .station-row.zero .rail .dot { border-color: var(--muted); background: var(--muted); }
   .station-row.done .rail::before { background: var(--good); opacity: 0.35; }
@@ -286,65 +191,38 @@
   .station-body { flex: 1; min-width: 0; padding-top: 1px; }
   .station-index { font-size: 11px; font-weight: 800; color: var(--muted); }
   .station-name { font-size: 15.5px; font-weight: 800; line-height: 1.35; white-space: pre-line; margin-top: 1px; }
-  .station-hint { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .station-hint { font-size: 12px; color: var(--muted); margin-top: 3px; display: flex; align-items: center; gap: 5px; }
   .station-row.done .station-hint { color: var(--good); }
 
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); flex: 0 0 auto; }
+  .sync-dot.synced { background: var(--good); }
+  .sync-dot.pending { background: var(--accent); }
+
   .count-badge {
-    align-self: center;
-    flex: 0 0 auto;
-    min-width: 46px;
-    text-align: center;
-    padding: 8px 10px;
-    border-radius: 999px;
-    background: var(--surface-alt);
-    color: var(--muted);
-    font-weight: 900;
-    font-size: 16px;
+    align-self: center; flex: 0 0 auto; min-width: 46px; text-align: center; padding: 8px 10px;
+    border-radius: 999px; background: var(--surface-alt); color: var(--muted); font-weight: 900; font-size: 16px;
   }
   .station-row.done .count-badge { background: var(--good-soft); color: var(--good); }
   .station-row.zero .count-badge { background: var(--surface-alt); color: var(--muted); }
 
   .sticky-actions {
-    position: sticky;
-    bottom: 0;
+    position: sticky; bottom: 0;
     background: linear-gradient(to top, var(--surface) 65%, rgba(255,255,255,0));
-    padding: 14px 0 4px;
-    display: flex;
-    gap: 10px;
-    margin-top: 4px;
+    padding: 14px 0 4px; display: flex; gap: 10px; margin-top: 4px;
   }
   .sticky-actions button { flex: 1; font-size: 14.5px; }
 
-  /* Number modal */
   dialog {
-    border: 0;
-    padding: 0;
-    width: min(420px, calc(100% - 20px));
-    border-radius: 22px;
-    box-shadow: 0 24px 60px rgba(15,23,42,0.28);
+    border: 0; padding: 0; width: min(420px, calc(100% - 20px));
+    border-radius: 22px; box-shadow: 0 24px 60px rgba(15,23,42,0.28);
   }
   dialog::backdrop { background: rgba(15,23,42,0.5); }
-
   .modal { padding: 20px; }
   .modal h3 { margin: 0 0 2px; font-size: 13px; color: var(--muted); font-weight: 800; letter-spacing: .04em; }
-  .modal .station-current {
-    font-weight: 900;
-    font-size: 19px;
-    white-space: pre-line;
-    margin-bottom: 16px;
-    line-height: 1.35;
-  }
+  .modal .station-current { font-weight: 900; font-size: 19px; white-space: pre-line; margin-bottom: 16px; line-height: 1.35; }
 
   .quick-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
-  .chip {
-    min-height: 40px;
-    padding: 0 14px;
-    border-radius: 999px;
-    background: var(--surface-alt);
-    color: var(--ink);
-    font-weight: 800;
-    font-size: 15px;
-  }
+  .chip { min-height: 40px; padding: 0 14px; border-radius: 999px; background: var(--surface-alt); color: var(--ink); font-weight: 800; font-size: 15px; }
   .chip.active { background: var(--primary); color: #fff; }
 
   .number-row { display: flex; align-items: center; gap: 10px; margin: 4px 0 16px; }
@@ -354,29 +232,23 @@
   .modal-actions { display: flex; gap: 10px; }
   .modal-actions button { flex: 1; font-size: 14.5px; }
 
+  /* Settings modal */
+  .settings-field { margin-bottom: 14px; }
+  .settings-status { font-size: 13px; font-weight: 700; padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; }
+  .settings-status.ok { background: var(--good-soft); color: #1f6b3d; }
+  .settings-status.bad { background: var(--danger-soft); color: #8f2f2f; }
+  .settings-status.idle { background: var(--surface-alt); color: var(--muted); }
+  .help-text { font-size: 12px; color: var(--muted); line-height: 1.6; margin-top: 10px; }
+  .help-text ol { margin: 6px 0 0; padding-left: 18px; }
+
   .toast {
-    position: fixed;
-    left: 50%; bottom: calc(18px + var(--safe-bottom));
-    transform: translateX(-50%);
-    background: #16211f;
-    color: #fff;
-    padding: 11px 18px;
-    border-radius: 999px;
-    font-weight: 800;
-    font-size: 14px;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.25);
-    z-index: 30;
+    position: fixed; left: 50%; bottom: calc(18px + var(--safe-bottom)); transform: translateX(-50%);
+    background: #16211f; color: #fff; padding: 11px 18px; border-radius: 999px;
+    font-weight: 800; font-size: 14px; box-shadow: 0 12px 28px rgba(0,0,0,0.25); z-index: 30;
   }
 
-  .summary-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-  .summary-table th, .summary-table td { border-bottom: 1px solid var(--border); padding: 9px 6px; text-align: left; }
-  .summary-table th { background: var(--surface-alt); font-size: 12px; color: var(--muted); }
-  .summary-table tr:last-child td { border-bottom: 0; }
-
   @media print {
-    header, .sticky-actions, .cta-row, #setupCard, .notice, .toast { display: none !important; }
-    main { margin-top: 0; }
-    .card { box-shadow: none; border: 1px solid #aaa; }
+    header, .sticky-actions, .cta-row, #setupCard, .notice { display: none !important; }
   }
 
   @media (max-width: 420px) {
@@ -388,9 +260,12 @@
 
 <header>
   <div class="wrap">
-    <span class="eyebrow" id="todayBadge">今日</span>
+    <div class="header-top">
+      <span class="eyebrow" id="todayBadge">今日</span>
+      <button class="settings-btn" id="openSettingsBtn">⚙️ 雲端同步設定</button>
+    </div>
     <h1>就醫專車乘車紀錄</h1>
-    <p class="subtitle">選路線 → 開始行駛 → 停靠站點時點選輸入人數</p>
+    <p class="subtitle">選路線 → 開始行駛 → 輸入人數即時同步 Google 試算表</p>
   </div>
   <div class="route-thread"></div>
 </header>
@@ -458,6 +333,11 @@
       </div>
     </div>
 
+    <div class="sync-bar off" id="syncBar">
+      <span id="syncBarText">☁️ 尚未設定雲端同步</span>
+      <button class="btn-secondary" id="syncBarBtn">前往設定</button>
+    </div>
+
     <div class="notice">🚐 行駛中請勿操作手機，車輛停妥、上下客完成後再登錄。</div>
 
     <div class="station-timeline" id="stationTimeline"></div>
@@ -468,61 +348,55 @@
     </div>
   </section>
 
-  <!-- STEP 3：備註與輸出 -->
-  <section class="card hidden" id="wrapupCard">
-    <div class="card-title">
-      <h2>備註與輸出</h2>
-      <span class="step-tag">STEP 3</span>
-    </div>
-    <p class="card-hint">完成後可匯出 CSV，供 Excel／試算表彙整；亦可直接列印或另存 PDF。</p>
-
-    <div>
-      <label for="tripNote">備註</label>
-      <textarea id="tripNote" rows="3" placeholder="例如：某站未停靠、乘客臨時取消、車況異常等"></textarea>
-    </div>
-
-    <div class="cta-row">
-      <div class="secondary-row">
-        <button class="btn-good" id="exportCsvBtn">匯出 CSV</button>
-        <button class="btn-secondary" id="printBtn">列印／存 PDF</button>
-      </div>
-    </div>
-
-    <div style="margin-top:16px; overflow:auto;">
-      <table class="summary-table" id="summaryTable">
-        <thead>
-          <tr>
-            <th style="width:44px;">序</th>
-            <th>站點</th>
-            <th style="width:70px;">人數</th>
-            <th style="width:80px;">狀態</th>
-          </tr>
-        </thead>
-        <tbody id="summaryBody">
-          <tr><td colspan="4">尚未載入站點。</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
 </main>
 
 <dialog id="countDialog">
   <div class="modal">
     <h3>本站上車人數</h3>
     <div class="station-current" id="modalStationName"></div>
-
     <div class="quick-chips" id="quickChips"></div>
-
     <div class="number-row">
       <button type="button" class="step" id="minusBtn">−</button>
       <input type="number" id="modalCount" min="0" step="1" inputmode="numeric" />
       <button type="button" class="step" id="plusBtn">＋</button>
     </div>
-
     <div class="modal-actions">
       <button type="button" class="btn-secondary" id="cancelModalBtn">取消</button>
-      <button type="button" class="btn-good" id="saveModalBtn">儲存</button>
+      <button type="button" class="btn-good" id="saveModalBtn">儲存並同步</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="settingsDialog">
+  <div class="modal">
+    <h3>雲端同步設定</h3>
+    <div class="station-current" style="font-size:17px;">Google 試算表連線</div>
+
+    <div id="settingsStatus" class="settings-status idle">尚未測試連線</div>
+
+    <div class="settings-field">
+      <label for="sheetUrlInput">Apps Script 網頁應用程式網址</label>
+      <input type="url" id="sheetUrlInput" placeholder="https://script.google.com/macros/s/xxxx/exec" />
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" id="testConnBtn">測試連線</button>
+      <button type="button" class="btn-good" id="saveSettingsBtn">儲存設定</button>
+    </div>
+
+    <div class="help-text">
+      本頁已內建預設的試算表連線網址，開啟即可直接使用，不需額外設定。若之後要改接其他試算表，才需要以下步驟：
+      <ol>
+        <li>開一份新的 Google 試算表</li>
+        <li>「擴充功能」→「Apps Script」，貼上提供的程式碼</li>
+        <li>「部署」→「新增部署作業」→ 類型選「網頁應用程式」</li>
+        <li>執行身分：我；誰可以存取：任何人</li>
+        <li>複製產生的網址，貼到上方欄位</li>
+      </ol>
+    </div>
+
+    <div class="modal-actions" style="margin-top:14px;">
+      <button type="button" class="btn-secondary btn-block" id="closeSettingsBtn">關閉</button>
     </div>
   </div>
 </dialog>
@@ -532,36 +406,20 @@
 <script>
   const ROUTES = {
     "東山線": [
-      "鹿東社區新安宮",
-      "鹿草員山宮廟口前",
-      "楊議員服務處",
-      "三角村路口",
-      "後崛活動中心",
-      "菁寮義昌米廠前路口",
-      "菁寮國小",
-      "前菁寮",
-      "後壁鄉公所",
-      "後壁鄉美而美早餐店",
-      "南靖車站",
-      "上茄苳顯濟宮",
-      "土溝\n紅綠燈",
-      "上秀祐舉人廟前榕樹下",
-      "漁市站",
-      "燦坤",
-      "福安宮",
-      "玉豐阿匹婆商店",
-      "大排竹國小",
-      "新營客運白河站",
-      "東山碧軒寺",
-      "大客",
-      "東原國小活動中心",
-      "瓦厝",
-      "青山里"
+      "鹿東社區新安宮","鹿草員山宮廟口前","楊議員服務處","三角村路口","後崛活動中心",
+      "菁寮義昌米廠前路口","菁寮國小","前菁寮","後壁鄉公所","後壁鄉美而美早餐店",
+      "南靖車站","上茄苳顯濟宮","土溝\n紅綠燈","上秀祐舉人廟前榕樹下","漁市站",
+      "燦坤","福安宮","玉豐阿匹婆商店","大排竹國小","新營客運白河站",
+      "東山碧軒寺","大客","東原國小活動中心","瓦厝","青山里"
     ]
   };
 
-  const STORAGE_KEY = "chiayi_cgmh_shuttle_trip_record_v2";
+  const STORAGE_KEY = "chiayi_cgmh_shuttle_trip_record_v3";
+  const SHEET_URL_KEY = "chiayi_cgmh_shuttle_sheet_url";
+  const DEFAULT_SHEET_URL = "https://script.google.com/macros/s/AKfycbzFl0a8K8leeCU1M2cBeIZ7pbNkPytAPBn0z2CA82ZsLV6Czf0OtaOPx3pv7capIrkfAw/exec";
+  const QUEUE_KEY = "chiayi_cgmh_shuttle_sync_queue";
   const QUICK_NUMBERS = [0, 1, 2, 3, 4, 5];
+  const RETRY_INTERVAL_MS = 15000;
 
   const $ = (id) => document.getElementById(id);
 
@@ -570,20 +428,18 @@
     tripStarted: false,
     currentStationIndex: null,
     stationCounts: {},
-    stationDone: {}
+    stationDone: {},
+    stationSynced: {},
+    sheetUrl: "",
+    syncQueue: []
   };
 
   function pad(num) { return String(num).padStart(2, "0"); }
-
   function todayString() {
     const now = new Date();
     return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
   }
-
-  function nowTimeString() {
-    const now = new Date();
-    return `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-  }
+  function nowIso() { return new Date().toISOString(); }
 
   function init() {
     $("tripDate").value = todayString();
@@ -591,9 +447,15 @@
 
     renderRouteOptions();
     buildQuickChips();
+    loadSheetUrl();
+    loadQueue();
     loadLocal();
     bindEvents();
     updateAll();
+    updateSyncBar();
+
+    window.addEventListener("online", flushQueue);
+    setInterval(flushQueue, RETRY_INTERVAL_MS);
   }
 
   function renderRouteOptions() {
@@ -604,10 +466,7 @@
       btn.type = "button";
       btn.className = "route-option";
       btn.dataset.route = route;
-      btn.innerHTML = `
-        <span class="dot"></span>
-        <span class="meta">${escapeHtml(route)}<small>共 ${ROUTES[route].length} 站</small></span>
-      `;
+      btn.innerHTML = `<span class="dot"></span><span class="meta">${escapeHtml(route)}<small>共 ${ROUTES[route].length} 站</small></span>`;
       btn.addEventListener("click", () => selectRoute(route));
       box.appendChild(btn);
     });
@@ -621,11 +480,8 @@
       chip.type = "button";
       chip.className = "chip";
       chip.textContent = n;
-      chip.addEventListener("click", () => {
-        $("modalCount").value = n;
-        highlightChip(n);
-      });
       chip.dataset.value = n;
+      chip.addEventListener("click", () => { $("modalCount").value = n; highlightChip(n); });
       box.appendChild(chip);
     });
   }
@@ -638,9 +494,7 @@
 
   function selectRoute(route) {
     state.selectedRoute = route;
-    document.querySelectorAll(".route-option").forEach(btn => {
-      btn.classList.toggle("selected", btn.dataset.route === route);
-    });
+    document.querySelectorAll(".route-option").forEach(btn => btn.classList.toggle("selected", btn.dataset.route === route));
     $("startBtn").disabled = false;
     saveLocal();
   }
@@ -655,10 +509,8 @@
     });
     $("fillZeroBtn").addEventListener("click", fillRemainingZero);
     $("finishBtn").addEventListener("click", finishTrip);
-    $("exportCsvBtn").addEventListener("click", exportCsv);
-    $("printBtn").addEventListener("click", () => window.print());
 
-    ["tripDate", "tripNo", "driverName", "tripNote"].forEach(id => {
+    ["tripDate", "tripNo", "driverName"].forEach(id => {
       $(id).addEventListener("change", () => { saveLocal(); updateAll(); });
       $(id).addEventListener("input", () => { saveLocal(); updateAll(); });
     });
@@ -668,26 +520,30 @@
     $("cancelModalBtn").addEventListener("click", closeModal);
     $("saveModalBtn").addEventListener("click", saveStationCount);
     $("modalCount").addEventListener("input", () => highlightChip($("modalCount").value));
+
+    $("openSettingsBtn").addEventListener("click", openSettings);
+    $("syncBarBtn").addEventListener("click", openSettings);
+    $("closeSettingsBtn").addEventListener("click", () => $("settingsDialog").close());
+    $("testConnBtn").addEventListener("click", testConnection);
+    $("saveSettingsBtn").addEventListener("click", saveSettings);
   }
 
   function startTrip() {
     const route = state.selectedRoute;
-    if (!route || !ROUTES[route]) {
-      showToast("請先選擇路線");
-      return;
-    }
+    if (!route || !ROUTES[route]) { showToast("請先選擇路線"); return; }
 
     ROUTES[route].forEach((_, index) => {
       if (typeof state.stationCounts[index] === "undefined") state.stationCounts[index] = "";
       if (typeof state.stationDone[index] === "undefined") state.stationDone[index] = false;
+      if (typeof state.stationSynced[index] === "undefined") state.stationSynced[index] = false;
     });
 
     state.tripStarted = true;
     $("setupCard").classList.add("hidden");
     $("tripCard").classList.remove("hidden");
-    $("wrapupCard").classList.remove("hidden");
     saveLocal();
     updateAll();
+    updateSyncBar();
     $("tripCard").scrollIntoView({ behavior: "smooth", block: "start" });
     showToast("已載入站點");
   }
@@ -705,15 +561,14 @@
   function renderStations() {
     const timeline = $("stationTimeline");
     timeline.innerHTML = "";
-
     if (!state.selectedRoute || !ROUTES[state.selectedRoute]) return;
 
     const stations = ROUTES[state.selectedRoute];
-
     stations.forEach((station, index) => {
       const done = Boolean(state.stationDone[index]);
       const value = state.stationCounts[index];
       const isZero = done && Number(value) === 0;
+      const synced = Boolean(state.stationSynced[index]);
 
       const row = document.createElement("div");
       row.className = "station-row" + (done ? " done" : "") + (isZero ? " zero" : "");
@@ -722,35 +577,14 @@
         <div class="station-body">
           <div class="station-index">第 ${index + 1} 站</div>
           <div class="station-name">${escapeHtml(station)}</div>
-          <div class="station-hint">${done ? "已填寫，點選可修改" : "點選輸入人數"}</div>
+          <div class="station-hint">
+            ${done ? `<span class="sync-dot ${synced ? "synced" : "pending"}"></span>${synced ? "已同步試算表" : "已儲存・待同步"}` : "點選輸入人數"}
+          </div>
         </div>
         <div class="count-badge">${done ? Number(value) : "－"}</div>
       `;
       row.addEventListener("click", () => openModal(index));
       timeline.appendChild(row);
-    });
-  }
-
-  function renderSummary() {
-    const body = $("summaryBody");
-    body.innerHTML = "";
-
-    if (!state.selectedRoute || !ROUTES[state.selectedRoute]) {
-      body.innerHTML = `<tr><td colspan="4">尚未載入站點。</td></tr>`;
-      return;
-    }
-
-    ROUTES[state.selectedRoute].forEach((station, index) => {
-      const done = Boolean(state.stationDone[index]);
-      const count = done ? Number(state.stationCounts[index]) : "";
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${index + 1}</td>
-        <td style="white-space: pre-line;">${escapeHtml(station)}</td>
-        <td>${done ? count : "-"}</td>
-        <td>${done ? "已填寫" : "未填寫"}</td>
-      `;
-      body.appendChild(tr);
     });
   }
 
@@ -768,8 +602,29 @@
   function updateAll() {
     renderTripHeader();
     renderStations();
-    renderSummary();
     updateStats();
+  }
+
+  function updateSyncBar() {
+    const bar = $("syncBar");
+    const text = $("syncBarText");
+    const pending = state.syncQueue.length;
+
+    if (!state.sheetUrl) {
+      bar.className = "sync-bar off";
+      text.textContent = "☁️ 尚未設定雲端同步";
+      $("syncBarBtn").textContent = "前往設定";
+      return;
+    }
+
+    $("syncBarBtn").textContent = "重新同步";
+    if (pending > 0) {
+      bar.className = "sync-bar pending";
+      text.textContent = `☁️ 待同步 ${pending} 筆，將自動重試`;
+    } else {
+      bar.className = "sync-bar ok";
+      text.textContent = "☁️ 已即時同步 Google 試算表";
+    }
   }
 
   function openModal(index) {
@@ -808,30 +663,32 @@
 
     state.stationCounts[index] = value;
     state.stationDone[index] = true;
+    state.stationSynced[index] = false;
     saveLocal();
     updateAll();
     closeModal();
-    showToast("站點人數已儲存");
+
+    queueSync(index);
+    showToast("已儲存，正在同步…");
   }
 
   function fillRemainingZero() {
     if (!state.selectedRoute) { showToast("請先選擇路線"); return; }
-
     ROUTES[state.selectedRoute].forEach((_, index) => {
       if (!state.stationDone[index]) {
         state.stationCounts[index] = 0;
         state.stationDone[index] = true;
+        state.stationSynced[index] = false;
+        queueSync(index);
       }
     });
-
     saveLocal();
     updateAll();
-    showToast("未填站點已填 0");
+    showToast("未填站點已填 0，正在同步…");
   }
 
   function finishTrip() {
     if (!state.selectedRoute) { showToast("請先選擇路線"); return; }
-
     const stations = ROUTES[state.selectedRoute];
     const missing = stations.map((_, index) => index).filter(index => !state.stationDone[index]);
 
@@ -841,9 +698,9 @@
       else return;
     }
 
+    flushQueue();
     saveLocal();
-    $("wrapupCard").scrollIntoView({ behavior: "smooth", block: "start" });
-    showToast("本趟紀錄已完成，可於下方匯出");
+    showToast(state.syncQueue.length > 0 ? "本趟已完成，剩餘資料將自動補送" : "本趟紀錄已完成並同步");
   }
 
   function resetTrip() {
@@ -855,22 +712,22 @@
     state.currentStationIndex = null;
     state.stationCounts = {};
     state.stationDone = {};
+    state.stationSynced = {};
 
     document.querySelectorAll(".route-option").forEach(btn => btn.classList.remove("selected"));
     $("startBtn").disabled = true;
     $("tripDate").value = todayString();
     $("tripNo").value = "上午第1班";
     $("driverName").value = "";
-    $("tripNote").value = "";
 
     localStorage.removeItem(STORAGE_KEY);
     $("setupCard").classList.remove("hidden");
     $("tripCard").classList.add("hidden");
-    $("wrapupCard").classList.add("hidden");
     updateAll();
     showToast("已清空本趟紀錄");
   }
 
+  // ---------- 本機儲存 ----------
   function saveLocal() {
     const payload = {
       selectedRoute: state.selectedRoute,
@@ -878,9 +735,9 @@
       tripDate: $("tripDate").value,
       tripNo: $("tripNo").value,
       driverName: $("driverName").value,
-      tripNote: $("tripNote").value,
       stationCounts: state.stationCounts,
-      stationDone: state.stationDone
+      stationDone: state.stationDone,
+      stationSynced: state.stationSynced
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   }
@@ -888,81 +745,155 @@
   function loadLocal() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
-
     try {
       const payload = JSON.parse(raw);
       state.selectedRoute = payload.selectedRoute || "";
       state.tripStarted = Boolean(payload.tripStarted);
       state.stationCounts = payload.stationCounts || {};
       state.stationDone = payload.stationDone || {};
+      state.stationSynced = payload.stationSynced || {};
 
       $("tripDate").value = payload.tripDate || todayString();
       $("tripNo").value = payload.tripNo || "上午第1班";
       $("driverName").value = payload.driverName || "";
-      $("tripNote").value = payload.tripNote || "";
 
       if (state.selectedRoute) {
-        document.querySelectorAll(".route-option").forEach(btn => {
-          btn.classList.toggle("selected", btn.dataset.route === state.selectedRoute);
-        });
+        document.querySelectorAll(".route-option").forEach(btn => btn.classList.toggle("selected", btn.dataset.route === state.selectedRoute));
         $("startBtn").disabled = false;
       }
-
       if (state.tripStarted && state.selectedRoute) {
         $("setupCard").classList.add("hidden");
         $("tripCard").classList.remove("hidden");
-        $("wrapupCard").classList.remove("hidden");
       }
-    } catch (err) {
-      console.warn("Cannot load local state", err);
+    } catch (err) { console.warn("Cannot load local state", err); }
+  }
+
+  // ---------- 雲端同步 ----------
+  function loadSheetUrl() {
+    let url = localStorage.getItem(SHEET_URL_KEY);
+    if (!url) {
+      url = DEFAULT_SHEET_URL;
+      localStorage.setItem(SHEET_URL_KEY, url);
+    }
+    state.sheetUrl = url;
+    $("sheetUrlInput").value = state.sheetUrl;
+  }
+
+  function loadQueue() {
+    try {
+      state.syncQueue = JSON.parse(localStorage.getItem(QUEUE_KEY) || "[]");
+    } catch (err) { state.syncQueue = []; }
+  }
+
+  function saveQueue() {
+    localStorage.setItem(QUEUE_KEY, JSON.stringify(state.syncQueue));
+  }
+
+  function queueSync(index) {
+    const payload = buildPayload(index);
+    // 移除同一站舊的待送資料，改放最新一筆
+    state.syncQueue = state.syncQueue.filter(item => item.stationIndex !== index || item.route !== payload.route || item.tripDate !== payload.tripDate || item.tripNo !== payload.tripNo);
+    state.syncQueue.push(payload);
+    saveQueue();
+    updateSyncBar();
+    flushQueue();
+  }
+
+  function buildPayload(index) {
+    return {
+      tripDate: $("tripDate").value,
+      tripNo: $("tripNo").value,
+      driverName: $("driverName").value,
+      route: state.selectedRoute,
+      stationIndex: index,
+      stationName: ROUTES[state.selectedRoute][index].replace(/\n/g, ""),
+      count: Number(state.stationCounts[index]),
+      timestamp: nowIso()
+    };
+  }
+
+  async function flushQueue() {
+    if (!state.sheetUrl || state.syncQueue.length === 0) { updateSyncBar(); return; }
+
+    const remaining = [];
+    for (const item of state.syncQueue) {
+      const ok = await sendToSheet(item);
+      if (ok) {
+        markSynced(item);
+      } else {
+        remaining.push(item);
+      }
+    }
+    state.syncQueue = remaining;
+    saveQueue();
+    updateSyncBar();
+    renderStations();
+  }
+
+  function markSynced(item) {
+    if (
+      state.selectedRoute === item.route &&
+      $("tripDate").value === item.tripDate &&
+      $("tripNo").value === item.tripNo
+    ) {
+      state.stationSynced[item.stationIndex] = true;
+      saveLocal();
     }
   }
 
-  function exportCsv() {
-    if (!state.selectedRoute) { showToast("請先選擇路線"); return; }
-
-    const route = state.selectedRoute;
-    const rows = [];
-    rows.push(["日期", "匯出時間", "路線", "班次", "司機姓名", "站點序號", "站點名稱", "上車人數", "備註"]);
-
-    ROUTES[route].forEach((station, index) => {
-      rows.push([
-        $("tripDate").value,
-        nowTimeString(),
-        route,
-        $("tripNo").value,
-        $("driverName").value,
-        index + 1,
-        station.replace(/\n/g, ""),
-        state.stationDone[index] ? Number(state.stationCounts[index]) : "",
-        $("tripNote").value
-      ]);
-    });
-
-    const csv = "\uFEFF" + rows.map(row => row.map(csvCell).join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const fileName = `${$("tripDate").value}_${route}_${$("tripNo").value}_乘車紀錄.csv`;
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    showToast("已匯出 CSV");
+  async function sendToSheet(payload) {
+    try {
+      const res = await fetch(state.sheetUrl, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      return json && json.ok === true;
+    } catch (err) {
+      return false;
+    }
   }
 
-  function csvCell(value) {
-    const text = String(value ?? "");
-    return `"${text.replace(/"/g, '""')}"`;
+  function openSettings() {
+    $("sheetUrlInput").value = state.sheetUrl;
+    setSettingsStatus("idle", state.sheetUrl ? "已設定連線網址，可測試確認是否正常" : "尚未設定連線網址");
+    $("settingsDialog").showModal();
+  }
+
+  function setSettingsStatus(type, text) {
+    const el = $("settingsStatus");
+    el.className = `settings-status ${type}`;
+    el.textContent = text;
+  }
+
+  async function testConnection() {
+    const url = $("sheetUrlInput").value.trim();
+    if (!url) { setSettingsStatus("bad", "請先貼上網頁應用程式網址"); return; }
+
+    setSettingsStatus("idle", "測試連線中…");
+    try {
+      const res = await fetch(url, { method: "GET" });
+      const json = await res.json();
+      if (json && json.ok) setSettingsStatus("ok", "✓ 連線成功，可以開始使用");
+      else setSettingsStatus("bad", "連線失敗，請確認部署設定");
+    } catch (err) {
+      setSettingsStatus("bad", "連線失敗，請確認網址或部署權限（任何人可存取）");
+    }
+  }
+
+  function saveSettings() {
+    const url = $("sheetUrlInput").value.trim();
+    state.sheetUrl = url;
+    localStorage.setItem(SHEET_URL_KEY, url);
+    updateSyncBar();
+    showToast(url ? "已儲存同步設定" : "已清除同步設定");
+    $("settingsDialog").close();
+    flushQueue();
   }
 
   function escapeHtml(text) {
-    return String(text)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+    return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
   function showToast(message) {
